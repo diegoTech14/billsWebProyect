@@ -1,54 +1,26 @@
 import { orderingUsersDesc, orderingUsersAsc, orderingUsersDescByName, orderingUsersAscByName } from './orderAlgo.js';
+import { showTable, numberOfPages, trimData } from './tableFunctions.js';
 
-var inpurSearch = document.getElementById("parameterSearch");
-var table = document.getElementById("tbody");
+var elements = {
+  inputSearch: document.getElementById("parameterSearch"),
+  selectEntries: document.getElementById("select-entries"),
+  table: document.getElementById("tbody")
+}
+
+var counters = {
+  value: 0,
+  start: 0,  
+  end: 3
+}
+
 var clippedData;
-var quantityRows = 0;
-var start = 0;
-var end = 3;
-var value = 0;
+var totalQuantityRows = 0;
 
-function showTable(allUsers) {
-  table.innerHTML = '<tr>';
-
-  for (let index = 0; index < allUsers.length; index++) {
-
-    let complete_name = allUsers[index]["nombre"] + " " + allUsers[index]["apellido_uno"] + " " + allUsers[index]["apellido_dos"];
-    table.innerHTML += '<th scope="row">' + allUsers[index]["cedula"] + '</th>' +
-      '<td>' + complete_name + '</td>' +
-      '<td>' + allUsers[index]["nombre_usuario"] + '</td>' +
-      '<td>' + allUsers[index]["numero_maquina"] + '</td>' +
-      '<td>' + allUsers[index]["estado"] + '</td>' +
-      '<td>' +
-      '<button class="btn btn-danger m-1">Deshabilitar</button>' +
-      '<button class="btn btn-success">Actualizar</button>' +
-      '</td>';
-    }
-  table.innerHTML += '</tr>' +
-    '</tr>';
-}
-
-// display the specific quantity of rows
-function trimData(data) {
-  
-  let dataResume = [];
-  let counter = 0;
-
-  if((start >= 0 && end >= 3) && end <= data.length){
-    for (let i = start; i < end; i++) {
-      if(data[i] != undefined){
-        dataResume[counter++] = data[i];
-      }
-    }
-  }
-  console.log(dataResume);
-  return dataResume;
-}
 
 function userFetchSearch() {
 
   let dataForm = new FormData();
-  dataForm.append("parameterSearch", inpurSearch.value);
+  dataForm.append("parameterSearch", elements.inputSearch.value);
 
   const url = "queries/queryUserSearch.php";
 
@@ -59,17 +31,41 @@ function userFetchSearch() {
     .then(response => response.json())
     .then((data) => {
 
-      clippedData = trimData(data);
       if (data == "") {
         usersFetch();
 
       } else {
-        showTable(data);
+        showTable(data, elements.table);
 
       }
     }).catch(error => alert(error));
 }
 
+
+function validatingValues(value, orderingParameters){
+  let functions = [showTable(orderingUsersDesc(clippedData, orderingParameters[0]), elements.table)];
+  //console.log(functions[value]);
+
+  if (value == 1) {
+    functions[value];
+
+  } else if (value == 2) {
+    showTable(orderingUsersAsc(clippedData, orderingParameters[0]), elements.table);
+
+  }if (value == 3) {
+    showTable(orderingUsersAsc(clippedData, orderingParameters[1]), elements.table);
+
+  } else if (value == 4) {
+    showTable(orderingUsersDesc(clippedData, orderingParameters[1]), elements.table);
+
+  } else if (value == 5) {
+    showTable(orderingUsersAscByName(clippedData, orderingParameters[2]), elements.table);
+
+  } else if (value == 6) {
+    showTable(orderingUsersDescByName(clippedData, orderingParameters[2]), elements.table);
+
+  }
+}
 
 function usersFetch() {
   const url = "queries/queryUsers.php";
@@ -77,36 +73,19 @@ function usersFetch() {
     .then(response => response.json())
     .then(function (data) {
       
-      clippedData = trimData(data);
+      clippedData = trimData(data, counters.end, counters.start);
+      totalQuantityRows = data.length;
       
-      quantityRows = data.length;
-      if (value == 1) {
-        showTable(orderingUsersDesc(clippedData, "cedula"));
+      let orderingParameters = ["cedula", "estado", "nombre"];
+      validatingValues(counters.value, orderingParameters);
 
-      } else if (value == 4) {
-        showTable(orderingUsersDesc(clippedData, "estado"));
-
-      } else if (value == 2) {
-        showTable(orderingUsersAsc(clippedData, "cedula"));
-
-      } else if (value == 3) {
-        showTable(orderingUsersAsc(clippedData, "estado"));
-
-      } else if (value == 5) {
-        showTable(orderingUsersAscByName(clippedData, "nombre"));
-
-      } else if (value == 6) {
-        showTable(orderingUsersDescByName(clippedData, "nombre"));
-
-      }else if(value == 0){
-        showTable(clippedData);
-      }
+      showTable(clippedData, elements.table);
+      numberOfPages(totalQuantityRows, elements.selectEntries);
     }).catch(error => alert(error));
 }
 
-
 function changingValueClick(data) {
-  value = data;
+  counters.value = data;
 }
 
 document.getElementById("parameterSearch").addEventListener("input", () => {
@@ -114,7 +93,7 @@ document.getElementById("parameterSearch").addEventListener("input", () => {
 });
 
 document.getElementById("orderingCedula").addEventListener("click", () => {
-  if (value == 0 || value == 2) {
+  if (counters.value == 0 || counters.value == 2) {
     changingValueClick(1);
 
   } else {
@@ -124,7 +103,7 @@ document.getElementById("orderingCedula").addEventListener("click", () => {
 });
 
 document.getElementById("orderingStatus").addEventListener("click", () => {
-  if (value == 0 || value == 4) {
+  if (counters.value == 0 || counters.value == 4) {
     changingValueClick(3);
 
   } else {
@@ -135,7 +114,7 @@ document.getElementById("orderingStatus").addEventListener("click", () => {
 });
 
 document.getElementById("orderingName").addEventListener("click", () => {
-  if (value == 0 || value == 5) {
+  if (counters.value == 0 || counters.value == 5) {
     changingValueClick(6);
 
   } else {
@@ -146,19 +125,29 @@ document.getElementById("orderingName").addEventListener("click", () => {
 });
 
 document.getElementById("left-btn").addEventListener("click", () =>{
-  if(start > 0){
-    start -= 3;
-    end -= 2;
+  if(counters.start > 0){
+    counters.start -= 3;
+    counters.end -= 2;
   }
   usersFetch();
 });
 
-document.getElementById("right-btn").addEventListener("click", () =>{
-  if(end <= quantityRows-1){
-    start += 3;
-    end += 2;
+document.getElementById("right-btn").addEventListener("click", () => {
+  if(counters.end <= totalQuantityRows-1){
+    counters.start += 3;
+    counters.end += 2;
+  }
+  usersFetch();
+});
+
+
+elements.selectEntries.addEventListener("change", () => {    
+  counters.end = parseInt(elements.selectEntries.value);
+  if(counters.end > totalQuantityRows){
+      counters.end = totalQuantityRows;
   }
   usersFetch();
 });
 
 usersFetch();
+
