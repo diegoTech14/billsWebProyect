@@ -8,22 +8,17 @@
 </head>
 
 <?php
-    session_start();
 
     include("templates/header.php");
-    include("queries/queryBills.php");
-
-    if($_SESSION["rol"] != "Jefe Superior"){
-        include("templates/notAdminInterface/navbarNotAdmin.php");
-    }else{
-        include("templates/navbar.php");
-    } 
+    include("templates/validationSession.php");
+    include("queries/billsQueries.php");
 ?>
 
 <body>
     <?php        
         if(isset($_SESSION["user_name"])){
-            showBills(allBills());
+            $billsQueries = new BillsQueries();
+            $billsQueries -> showBills();
         }else{
             header("location: login.php");
         }

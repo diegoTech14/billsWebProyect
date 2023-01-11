@@ -4,11 +4,13 @@
     include('../queries/connection.php');
     include('hashingPassword.php');
 
+    $connection = new Connection();
+
     //This method returns the hashedPassword from the database using the DNI
     function getCryptedPasswordFromDatabase($DNI){
         global $connection;
         if(isset($_POST['DNI'])){
-            $result = $connection -> query("SELECT usuarios.contraseña FROM usuarios WHERE usuarios.cedula_persona = '$DNI'");
+            $result = $connection -> connect() -> query("SELECT usuarios.contraseña FROM usuarios WHERE usuarios.cedula_persona = '$DNI'");
             
             if($result){
                 $row = $result -> fetch_array();
@@ -34,7 +36,7 @@
 
                 if(verifyHashedPassword($password, $passwordResult) AND $passwordResult){
                     
-                    $result = $connection -> query("SELECT usuarios.nombre_usuario, personas.puesto, usuarios.numero_maquina FROM usuarios INNER JOIN personas ON usuarios.cedula_persona = personas.cedula 
+                    $result = $connection -> connect() -> query ("SELECT usuarios.nombre_usuario, personas.puesto, usuarios.numero_maquina FROM usuarios INNER JOIN personas ON usuarios.cedula_persona = personas.cedula 
                     WHERE usuarios.cedula_persona = '$DNI' AND usuarios.contraseña = '$passwordResult';");
 
                     if($result){

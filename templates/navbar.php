@@ -15,7 +15,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="users.php">Usuarios</a></li>
-                        <li><a class="dropdown-item" href="#">Proveedores</a></li>
+                        <li><a class="dropdown-item" href="providers.php">Proveedores</a></li>
                     </ul>
                 </li>
             </ul>

@@ -1,7 +1,7 @@
 <?php 
 
     function hashPassword($password){
-        return password_hash("hulkeate99", PASSWORD_BCRYPT);
+        return password_hash($password, PASSWORD_BCRYPT);
     }
     
     function verifyHashedPassword($password, $hashedPassword){
