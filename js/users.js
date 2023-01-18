@@ -1,7 +1,10 @@
 import { usersFetch } from "./functions/fetchFunctions.js";
 
-document.getElementById("refresh").addEventListener("click", () =>{
-    console.log("si");
-    usersFetch("queries/users/allUsers.php");    
+export let table = $('#myTable').DataTable({
+    ordering:true,
+    paging:true,
+    info:true
 });
-usersFetch("queries/users/allUsers.php");
+
+usersFetch(table);
+

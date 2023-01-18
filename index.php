@@ -12,6 +12,7 @@
     include("templates/header.php");
     include("templates/validationSession.php");
     include("queries/billsQueries.php");
+    //include("queries/users/userQueryObject.php");
 ?>
 
 <body>
