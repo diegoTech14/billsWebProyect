@@ -1,4 +1,4 @@
-import { userFetchSearch,usersFetch } from "./fetchFunctions.js";
+import { userFetchSearch } from "./fetchFunctions.js";
 
 
 export function editFunction(cedula) {
@@ -6,6 +6,7 @@ export function editFunction(cedula) {
 }
 
 export function suspendFunction(cedula) {
+    console.log(cedula);
     userFetchSearch({cedula:cedula, url:"./queries/users/disableUser.php"});
 }
 

@@ -1,4 +1,4 @@
 <?php
-    include("userQueryObject.php");
-    echo $userQueries -> enableUser();
-?>
+    include("../users/usersQueries.php");
+    $queryObject = new UsersQueries();
+    echo $queryObject -> enableUser();

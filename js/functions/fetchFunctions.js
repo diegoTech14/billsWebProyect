@@ -24,8 +24,6 @@ export function usersFetch(table) {
         }).catch(error => alert(error));
 }
 
-
-
 export function userFetchSearch({ cedula, url }) {
 
     let dataForm = new FormData();

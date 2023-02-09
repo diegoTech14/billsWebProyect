@@ -1,4 +1,5 @@
 <?php
-    include("userQueryObject.php");
-    echo $userQueries -> disableUser();
+    include("../users/usersQueries.php");
+    $queryObject = new UsersQueries();
+    echo $queryObject -> disableUser();
 ?>
