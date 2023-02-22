@@ -1,7 +1,8 @@
-import { enableFunction, suspendFunction } from "./rowFunctions.js";
+import { enableFunction, suspendFunction, editFunction} from "./rowFunctions.js";
 
 $(document).on('click', '.btnEdit', function(){
-    alert("hi");
+    const element = $(this)[0].parentElement.parentElement;
+    editFunction(element.childNodes[0].textContent);
 });
 
 $(document).on('click', '.btnDisable', function(){

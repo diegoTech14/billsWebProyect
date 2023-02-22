@@ -12,10 +12,10 @@
     include("templates/header.php");
     include("templates/validationSession.php");
     include("queries/billsQueries.php");
-    //include("queries/users/userQueryObject.php");
 ?>
 
 <body>
+    <button class="btn btn-primary" id="notificar">Notificar</button>
     <?php        
         if(isset($_SESSION["user_name"])){
             $billsQueries = new BillsQueries();
@@ -25,4 +25,5 @@
         }
     ?>
 </body>
+    <script src="js/notificar.js"></script>
 </html>
